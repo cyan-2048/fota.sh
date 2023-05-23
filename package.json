@@ -1,21 +1,31 @@
 {
-  "name": "vite-project",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
-    "prettier": "^2.7.1",
-    "prettier-plugin-svelte": "^2.7.0",
-    "svelte": "^3.44.0",
-    "vite": "^3.0.0"
-  },
-  "dependencies": {
-    "@picocss/pico": "^1.5.6"
-  }
+	"name": "kaios-preact-starter",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@emotion/react": "^11.11.0",
+		"@emotion/styled": "^11.11.0",
+		"@fontsource/roboto": "^4.5.8",
+		"@mui/icons-material": "^5.11.16",
+		"@mui/lab": "^5.0.0-alpha.130",
+		"@mui/material": "^5.13.0",
+		"preact": "^10.13.1",
+		"react": "npm:@preact/compat",
+		"react-dom": "npm:@preact/compat",
+		"react-syntax-highlighter": "^15.5.0",
+		"sass": "^1.62.1"
+	},
+	"devDependencies": {
+		"@preact/preset-vite": "^2.5.0",
+		"@preact/signals": "^1.1.3",
+		"core-js": "^3.30.2",
+		"typescript": "^5.0.2",
+		"vite": "^4.3.2"
+	}
 }
