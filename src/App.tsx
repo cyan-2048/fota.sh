@@ -3,7 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -110,10 +110,13 @@ export default function App() {
 				</AppBar>
 			</HideOnScroll>
 			<Box component="nav">
-				<Drawer
+				<SwipeableDrawer
 					variant="temporary"
 					open={mobileOpen}
 					onClose={handleDrawerToggle}
+					onOpen={() => {
+						setMobileOpen(true);
+					}}
 					ModalProps={{
 						keepMounted: true, // Better open performance on mobile.
 					}}
@@ -153,7 +156,7 @@ export default function App() {
 							</Select>
 						</FormControl>
 					</Box>
-				</Drawer>
+				</SwipeableDrawer>
 			</Box>
 			<Box component="main" sx={{ p: 3, width: "100%" }}>
 				<Toolbar />
