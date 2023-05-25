@@ -135,6 +135,16 @@ const CurefField = memo(function (props: FieldProps) {
 
 	useInputWorkaround(inputRef as any, props.validate, curef);
 
+	useEffect(() => {
+		const e = inputRef.current?.querySelector("input");
+		e &&
+			(e.onkeyup = (e) => {
+				if (e.key == "Enter") {
+					document.getElementById("input2-with-sx")?.focus();
+				}
+			});
+	}, []);
+
 	return <TextField error={props.error} ref={inputRef} helperText={curef.value == "" ? "Ex. BTS-23BTS70VN00" : null} id="input1-with-sx" label="CUREF" variant="filled" />;
 });
 
@@ -142,6 +152,16 @@ const VersionField = memo(function (props: FieldProps) {
 	const inputRef = useRef<HTMLDivElement>(null);
 
 	useInputWorkaround(inputRef as any, props.validate, version);
+
+	useEffect(() => {
+		const e = inputRef.current?.querySelector("input");
+		e &&
+			(e.onkeyup = (e) => {
+				if (e.key == "Enter") {
+					if (version.peek() && curef.peek()) check();
+				}
+			});
+	}, []);
 
 	return <TextField ref={inputRef} helperText={version.value == "" ? "Ex. 30.00.17.05" : null} error={props.error} id="input2-with-sx" label="VERSION" variant="filled" />;
 });
