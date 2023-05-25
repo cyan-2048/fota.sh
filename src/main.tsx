@@ -1,4 +1,4 @@
-import { createContext, render } from "preact";
+import { render } from "preact";
 import App from "./App.tsx";
 
 import "@fontsource/roboto/300.css";
@@ -7,9 +7,9 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { signal } from "@preact/signals";
-import { useState, useMemo } from "preact/hooks";
+import { useMemo } from "preact/hooks";
 import { themeMode } from "./lib/shared";
+import { DeviceDialog } from "./routes/Devices.tsx";
 
 export default function ToggleColorMode() {
 	const mode = themeMode.value;
@@ -27,6 +27,7 @@ export default function ToggleColorMode() {
 	return (
 		<ThemeProvider theme={theme}>
 			<App />
+			<DeviceDialog />
 		</ThemeProvider>
 	);
 }
@@ -42,8 +43,9 @@ if (import.meta.env.DEV) {
 		import("preact/compat"),
 		// @ts-ignore
 		import("https://unpkg.com/htm?module"),
-	]).then(([shared, curefs, utils, Preact, React, htm]) => {
+		import("./routes/signals.ts"),
+	]).then(([shared, curefs, utils, Preact, React, htm, signals]) => {
 		const jsx = htm.default.bind(React.createElement);
-		Object.assign(window, { shared, curefs, utils, Preact, React, jsx }, utils);
+		Object.assign(window, { shared, curefs, utils, Preact, React, jsx, signals }, utils);
 	});
 }

@@ -5,6 +5,7 @@ addEventListener("message", ({ data }) => {
 	console.log("received message");
 	for (const [device, _curefs] of curefs.entries()) {
 		if (_curefs.includes(data)) {
+			postMessage(_curefs);
 			return postMessage(device);
 		}
 	}

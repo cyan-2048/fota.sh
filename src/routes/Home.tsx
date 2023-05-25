@@ -38,7 +38,7 @@ async function fetchWorker(params: Record<string, string> = {}) {
 	return text ? (parser.parseFromString(text, "text/xml") as XMLDocument) : null;
 }
 
-async function check() {
+export async function check() {
 	batch(() => {
 		download_url.value = null;
 		download_loading.value = false;
@@ -109,7 +109,7 @@ function useInputWorkaround(inputRef: MutableRef<HTMLDivElement>, validate: () =
 	useEffect(() => {
 		const input = inputRef.current?.querySelector("input");
 
-		const emit = () => input.dispatchEvent(new Event("input", { bubbles: true }));
+		const emit = () => input?.dispatchEvent(new Event("input", { bubbles: true }));
 
 		if (input) {
 			input.value = curef.peek();
@@ -135,7 +135,7 @@ const CurefField = memo(function (props: FieldProps) {
 
 	useInputWorkaround(inputRef as any, props.validate, curef);
 
-	return <TextField error={props.error} ref={inputRef} id="input1-with-sx" label="CUREF" variant="filled" />;
+	return <TextField error={props.error} ref={inputRef} helperText={curef.value == "" ? "Ex. BTS-23BTS70VN00" : null} id="input1-with-sx" label="CUREF" variant="filled" />;
 });
 
 const VersionField = memo(function (props: FieldProps) {
@@ -143,7 +143,7 @@ const VersionField = memo(function (props: FieldProps) {
 
 	useInputWorkaround(inputRef as any, props.validate, version);
 
-	return <TextField ref={inputRef} helperText={version.value == "" ? "Ex. 12.00.17.01" : null} error={props.error} id="input2-with-sx" label="VERSION" variant="filled" />;
+	return <TextField ref={inputRef} helperText={version.value == "" ? "Ex. 30.00.17.05" : null} error={props.error} id="input2-with-sx" label="VERSION" variant="filled" />;
 });
 
 function FormSubmitButton() {

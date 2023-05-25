@@ -16,3 +16,5 @@ export const result = signal<
 			};
 	  }
 >(undefined);
+
+export const showDevice = signal(false);
