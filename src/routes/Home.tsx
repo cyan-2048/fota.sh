@@ -1,6 +1,6 @@
-import { curef, env, version } from "../lib/shared";
+import { curef, env, serverBackend, version } from "../lib/shared";
 import Button from "@mui/lab/LoadingButton";
-import { Accordion, AccordionDetails, AccordionSummary, Box, CircularProgress, Divider, Grid, Paper, Skeleton, Stack, TextField, Typography, TypographyProps } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, CircularProgress, Divider, Grid, Paper, Stack, TextField, Typography } from "@mui/material";
 
 import SendIcon from "@mui/icons-material/Send";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -19,16 +19,17 @@ SyntaxHighlighter.registerLanguage("xml", xml);
 
 import { result, download_loading, download_url } from "./signals.ts";
 import { Signal, batch } from "@preact/signals";
-import { ChangeEvent, useMemo, JSX } from "react";
+import { useMemo, JSX } from "react";
 import { memo } from "preact/compat";
-import { Ref } from "preact";
 
-const worker = "https://fota-kaios.cyan-2048.workers.dev/";
+// const worker = "https://fota-kaios.cyan-2048.workers.dev/";
 
 const parser = new DOMParser();
 const serializer = new XMLSerializer();
 
 async function fetchWorker(params: Record<string, string> = {}) {
+	const worker = serverBackend.peek() == "cloudflare" ? "https://fota-kaios.cyan-2048.workers.dev/" : "https://fota-kaios.vercel.app/";
+
 	const resp = await fetch(worker + "?" + new URLSearchParams({ version: version.peek(), curef: curef.peek(), env: env.peek(), ...params }).toString());
 	const text = await resp.text();
 	if (text.includes("html") || text.includes("HTML")) {
@@ -38,6 +39,40 @@ async function fetchWorker(params: Record<string, string> = {}) {
 	return text ? (parser.parseFromString(text, "text/xml") as XMLDocument) : null;
 }
 
+let cloudflareStatus: null | boolean = null;
+
+async function _checkCloudflareStatus() {
+  try {
+    const resp = await fetch("https://www.cloudflarestatus.com/api/v2/status.json");
+
+    if (!resp.ok) {
+      return false;
+    }
+
+    const data = await resp.json();
+
+    const indicator = data.status.indicator as "none" | "minor" | "major" | "critical";
+
+    if (indicator == "major" || indicator == "critical") return false;
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function checkCloudflareStatus() {
+	if (cloudflareStatus === null) {
+		const result = await _checkCloudflareStatus();
+		cloudflareStatus = result;
+		if (!result) {
+			// use vercel if Cloudflare is dead
+			serverBackend.value = "vercel";
+		}
+	}
+	return cloudflareStatus;
+}
+
 export async function check() {
 	batch(() => {
 		download_url.value = null;
@@ -45,6 +80,8 @@ export async function check() {
 
 		result.value = null;
 	});
+
+	await checkCloudflareStatus();
 
 	const xml = await fetchWorker({ type: "check" });
 

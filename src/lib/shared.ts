@@ -6,6 +6,8 @@ export const curef = signal("");
 export const version = signal("");
 export const env = signal<"fota" | "test" | "dev">("fota");
 
+export const serverBackend = signal<"cloudflare" | "vercel">("cloudflare");
+
 export const device = signal<null | string>(null);
 export const deviceCurefs = signal<null | string[]>(null);
 
